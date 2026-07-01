@@ -36,4 +36,3 @@ class AgentState(TypedDict, total=False):
     iteration: int
     final_decision: str
     audit_log: list[dict[str, Any]]
-    

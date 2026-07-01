@@ -15,6 +15,10 @@ def decimal_or_none(value: Any) -> Decimal | None:
     except Exception:
         return None
 
+def clamp(value: float, minimum: float = 0.0, maximum: float = 1.0) -> float:
+    return max(minimum, min(value, maximum))
+
+
 def extract_json_object(text: str) -> dict[str, Any] | None:
     """Пытается вытащить JSON из ответа LLM.
 

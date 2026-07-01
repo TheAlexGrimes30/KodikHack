@@ -6,11 +6,11 @@ from sqlalchemy import Text, Numeric, ForeignKey, UUID
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.db.base import Base
+from backend.db.base import Base, TimestampMixin
 from backend.db.sessions import Session
 
 
-class Intent(Base):
+class Intent(Base, TimestampMixin):
     __tablename__ = "intents"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

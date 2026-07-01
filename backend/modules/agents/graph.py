@@ -1,6 +1,6 @@
-from typing import Any, Callable, Awaitable, cast
+from typing import Any, Awaitable, Callable, cast
 
-from langgraph.constants import END, START
+from langgraph.constants import START, END
 from langgraph.graph import StateGraph
 
 from backend.modules.agents.calibration.agent import CalibrationAgent
@@ -14,6 +14,7 @@ from backend.modules.agents.threshold.agent import ThresholdAgent
 
 SyncNode = Callable[[AgentState], dict[str, Any]]
 AsyncNode = Callable[[AgentState], Awaitable[dict[str, Any]]]
+
 
 class AgentGraphBuilder:
     def __init__(self, llm: LLMClient | None = None) -> None:
@@ -29,28 +30,15 @@ class AgentGraphBuilder:
         graph = StateGraph(AgentState)
 
         graph.add_node("intention", cast(SyncNode, self._intention_node))
-        graph.add_node("supervisor", cast(SyncNode, self._supervisor_node))
         graph.add_node("environment", cast(AsyncNode, self._environment_node))
         graph.add_node("destructor", cast(SyncNode, self._destructor_node))
         graph.add_node("threshold", cast(SyncNode, self._threshold_node))
 
         graph.add_edge(START, "intention")
-        graph.add_edge("intention", "supervisor")
-
-        graph.add_conditional_edges(
-            "supervisor",
-            self._route_from_supervisor,
-            {
-                "environment": "environment",
-                "destructor": "destructor",
-                "threshold": "threshold",
-                "end": END,
-            },
-        )
-
-        graph.add_edge("environment", "supervisor")
-        graph.add_edge("destructor", "supervisor")
-        graph.add_edge("threshold", "supervisor")
+        graph.add_edge("intention", "environment")
+        graph.add_edge("environment", "destructor")
+        graph.add_edge("destructor", "threshold")
+        graph.add_edge("threshold", END)
 
         return graph.compile()
 
@@ -77,21 +65,6 @@ class AgentGraphBuilder:
 
     def _calibration_node(self, state: AgentState) -> dict[str, Any]:
         return self.calibration.run(state)
-
-    def _supervisor_node(self, state: AgentState) -> dict[str, Any]:
-        if not state.get("env_scenarios"):
-            next_agent = "environment"
-        elif not state.get("attacks"):
-            next_agent = "destructor"
-        elif not state.get("threshold_decision"):
-            next_agent = "threshold"
-        else:
-            next_agent = "end"
-
-        return {"next_agent": next_agent}
-
-    def _route_from_supervisor(self, state: AgentState) -> str:
-        return state.get("next_agent", "end")
 
 
 def build_analysis_graph():

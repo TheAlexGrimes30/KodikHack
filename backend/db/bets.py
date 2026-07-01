@@ -23,7 +23,7 @@ class Bet(Base, TimestampMixin):
         ForeignKey("projects.id", ondelete="CASCADE"),
         nullable=False
     )
-    
+
     description: Mapped[str] = mapped_column(Text, nullable=False)
     size_money: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
     predicted_metric: Mapped[str | None] = mapped_column(Text)

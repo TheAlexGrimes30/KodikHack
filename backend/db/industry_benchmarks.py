@@ -1,12 +1,14 @@
+import typing
 import uuid
 from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import UUID, ForeignKey, Text, Numeric, DateTime, func, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from backend.db.base import Base
-from backend.db.configurators import Configurator
+
+if typing.TYPE_CHECKING:
+    from backend.db.configurators import Configurator
 
 
 class IndustryBenchmark(Base):

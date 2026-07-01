@@ -1,3 +1,4 @@
+import typing
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -5,9 +6,10 @@ from decimal import Decimal
 from sqlalchemy import Index, Text, ForeignKey, UUID, Numeric, DateTime, func
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 
-from backend.db.base import Base, TimestampMixin
-from backend.db.projects import Project
-from backend.db.sessions import Session
+if typing.TYPE_CHECKING:
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.projects import Project
+    from backend.db.sessions import Session
 
 
 class Bet(Base, TimestampMixin):

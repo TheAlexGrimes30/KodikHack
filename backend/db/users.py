@@ -1,9 +1,12 @@
+import typing
 import uuid
 from sqlalchemy import UUID, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.db.base import Base, TimestampMixin
-from backend.db.projects import Project
+
+if typing.TYPE_CHECKING:
+    from backend.db.projects import Project
 
 
 class User(Base, TimestampMixin):

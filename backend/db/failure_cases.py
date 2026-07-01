@@ -1,10 +1,12 @@
+import typing
 import uuid
 
 from sqlalchemy import UUID, ForeignKey, Text, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.db.base import Base, TimestampMixin
-from backend.db.configurators import Configurator
+if typing.TYPE_CHECKING:
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.configurators import Configurator
 
 
 class FailureCase(Base, TimestampMixin):
@@ -28,4 +30,3 @@ class FailureCase(Base, TimestampMixin):
         Index("idx_failure_cases_vertical", "vertical_key"),
         Index("idx_failure_cases_risk", "risk_type"),
     )
-    

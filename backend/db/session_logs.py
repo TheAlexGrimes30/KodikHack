@@ -1,3 +1,4 @@
+import typing
 import uuid
 from typing import Any
 
@@ -7,7 +8,9 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.db.base import TimestampMixin, Base
 from backend.db.enums import AgentKind
-from backend.db.sessions import Session
+
+if typing.TYPE_CHECKING:
+    from backend.db.sessions import Session
 
 
 class SessionLog(Base, TimestampMixin):
@@ -39,4 +42,3 @@ class SessionLog(Base, TimestampMixin):
     session: Mapped[Session] = relationship(back_populates="logs")
 
     __table_args__ = (Index("idx_session_logs_session", "session_id", "created_at"),)
-    

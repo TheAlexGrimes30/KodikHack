@@ -1,13 +1,15 @@
+import typing
 import uuid
-from datetime import datetime
 from decimal import Decimal
 
 from sqlalchemy import UUID, ForeignKey, Text, Numeric, Boolean, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from backend.db.base import Base, TimestampMixin
-from backend.db.env_scenarios import EnvScenario
-from backend.db.sessions import Session
+if typing.TYPE_CHECKING:
+    from backend.db.assumptions import Assumption
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.env_scenarios import EnvScenario
+    from backend.db.sessions import Session
 
 
 class Attack(Base, TimestampMixin):

@@ -1,11 +1,13 @@
+import typing
 import uuid
 from datetime import date
 
 from sqlalchemy import CheckConstraint, Index, Integer, Date, Text, ForeignKey, UUID
 from sqlalchemy.orm import mapped_column, relationship, Mapped
 
-from backend.db.base import Base, TimestampMixin
-from backend.db.data_feeds import DataFeed
+if typing.TYPE_CHECKING:
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.data_feeds import DataFeed
 
 
 class EnvironmentEvent(Base, TimestampMixin):
@@ -28,4 +30,3 @@ class EnvironmentEvent(Base, TimestampMixin):
         CheckConstraint("impact_hint BETWEEN 1 AND 5", name="ck_environment_events_impact_hint"),
         Index("idx_env_events_cat_date", "category", "happened_at"),
     )
-    

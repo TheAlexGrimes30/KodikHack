@@ -1,3 +1,4 @@
+import typing
 import uuid
 from datetime import date
 from decimal import Decimal
@@ -6,7 +7,9 @@ from sqlalchemy import UUID, ForeignKey, Date, Numeric, Text, UniqueConstraint, 
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from backend.db.base import Base, TimestampMixin
-from backend.db.data_feeds import DataFeed
+
+if typing.TYPE_CHECKING:
+    from backend.db.data_feeds import DataFeed
 
 
 class MacroIndicator(Base, TimestampMixin):

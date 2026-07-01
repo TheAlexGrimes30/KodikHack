@@ -1,3 +1,4 @@
+import typing
 import uuid
 from decimal import Decimal
 from typing import Any
@@ -5,10 +6,11 @@ from typing import Any
 from sqlalchemy import Text, Numeric, ForeignKey, UUID
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from backend.db.base import Base, TimestampMixin
-from backend.db.sessions import Session
 
+if typing.TYPE_CHECKING:
+    from backend.db.sessions import Session
+    from backend.db.assumptions import Assumption
 
 class Intent(Base, TimestampMixin):
     __tablename__ = "intents"

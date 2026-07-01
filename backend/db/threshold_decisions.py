@@ -1,12 +1,15 @@
+import typing
 import uuid
 from decimal import Decimal
 
-from sqlalchemy import UUID, ForeignKey, Enum, Numeric, Text, DateTime, CheckConstraint
+from sqlalchemy import UUID, ForeignKey, Enum, Numeric, Text, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.db.base import Base, TimestampMixin
-from backend.db.enums import Reversibility, ThresholdVerdict
-from backend.db.sessions import Session
+
+if typing.TYPE_CHECKING:
+    from backend.db.enums import Reversibility, ThresholdVerdict
+    from backend.db.sessions import Session
 
 
 class ThresholdDecision(Base, TimestampMixin):

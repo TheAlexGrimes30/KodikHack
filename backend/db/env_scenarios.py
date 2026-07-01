@@ -1,3 +1,4 @@
+import typing
 import uuid
 from decimal import Decimal
 from typing import Any
@@ -6,9 +7,10 @@ from sqlalchemy import UUID, ForeignKey, Text, Integer, Numeric, CheckConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.db.attacks import Attack
-from backend.db.base import Base, TimestampMixin
-from backend.db.sessions import Session
+if typing.TYPE_CHECKING:
+    from backend.db.attacks import Attack
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.sessions import Session
 
 
 class EnvScenario(Base, TimestampMixin):

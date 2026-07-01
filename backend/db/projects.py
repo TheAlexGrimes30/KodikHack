@@ -1,3 +1,4 @@
+import typing
 import uuid
 from decimal import Decimal
 
@@ -5,9 +6,13 @@ from sqlalchemy import ForeignKey, UUID, Text, Enum, Integer, Numeric, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from backend.db.base import Base, TimestampMixin
-from backend.db.enums import ProjectStage, RiskAppetite
-from backend.db.sessions import Session
-from backend.db.users import User
+
+if typing.TYPE_CHECKING:
+    from backend.db.bets import Bet
+    from backend.db.callibration_records import CalibrationRecord
+    from backend.db.enums import ProjectStage, RiskAppetite
+    from backend.db.sessions import Session
+    from backend.db.users import User
 
 
 class Project(Base, TimestampMixin):

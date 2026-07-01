@@ -1,9 +1,11 @@
+import typing
 import uuid
 
 from sqlalchemy import UUID, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.db.base import Base, TimestampMixin
+if typing.TYPE_CHECKING:
+    from backend.db.base import Base, TimestampMixin
 
 
 class Configurator(Base, TimestampMixin):

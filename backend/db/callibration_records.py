@@ -1,12 +1,14 @@
+import typing
 import uuid
 from decimal import Decimal
 
 from sqlalchemy import UUID, Numeric, ForeignKey, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
-from backend.db.base import Base, TimestampMixin
-from backend.db.bets import Bet
-from backend.db.projects import Project
+if typing.TYPE_CHECKING:
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.bets import Bet
+    from backend.db.projects import Project
 
 
 class CalibrationRecord(Base, TimestampMixin):
@@ -35,4 +37,3 @@ class CalibrationRecord(Base, TimestampMixin):
     project: Mapped[Project] = relationship(back_populates="calibration_records")
 
     __table_args__ = (Index("idx_calibration_project", "project_id"),)
-    

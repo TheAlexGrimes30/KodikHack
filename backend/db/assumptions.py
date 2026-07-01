@@ -1,15 +1,16 @@
+import typing
 import uuid
-from datetime import datetime
 
 from sqlalchemy import Integer, Boolean, Text, CheckConstraint, Index, UUID, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.db.attacks import Attack
-from backend.db.base import Base
-from backend.db.intents import Intent
+if typing.TYPE_CHECKING:
+    from backend.db.attacks import Attack
+    from backend.db.base import Base, TimestampMixin
+    from backend.db.intents import Intent
 
 
-class Assumption(Base):
+class Assumption(Base, TimestampMixin):
     __tablename__ = "assumptions"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -17,10 +18,12 @@ class Assumption(Base):
         primary_key=True,
         default=uuid.uuid4
     )
+
     intent_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("intents.id", ondelete="CASCADE"),
         nullable=False
     )
+
     statement: Mapped[str] = mapped_column(Text, nullable=False)
     is_explicit: Mapped[bool] = mapped_column(
         Boolean,

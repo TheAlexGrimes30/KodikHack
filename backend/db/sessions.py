@@ -1,13 +1,17 @@
+import typing
 import uuid
 
 from sqlalchemy import UUID, ForeignKey, Enum, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from backend.db.attacks import Attack
 from backend.db.base import Base
-from backend.db.enums import SessionStatus
-from backend.db.env_scenarios import EnvScenario
-from backend.db.projects import Project
+
+if typing.TYPE_CHECKING:
+    from backend.db.attacks import Attack
+    from backend.db.enums import SessionStatus
+    from backend.db.env_scenarios import EnvScenario
+    from backend.db.projects import Project
+    from backend.db.bets import Bet
+    from backend.db.session_logs import SessionLog
 
 
 class Session(Base):

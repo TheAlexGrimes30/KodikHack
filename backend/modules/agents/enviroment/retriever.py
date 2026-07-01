@@ -56,4 +56,3 @@ class StubEnvironmentRetriever(EnvironmentRetriever):
                 metadata={"risk_type": "runway"},
             ),
         ][:limit]
-    

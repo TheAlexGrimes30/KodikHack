@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from backend.modules.agents.common.llm import LLMClient
 from backend.modules.agents.common.prompt_utils import load_prompt
 from backend.modules.agents.common.state import AgentState
-from backend.modules.agents.common.utils import decimal_or_none, extract_json_object
+from backend.modules.agents.common.utils import decimal_or_none, extract_json_object, add_audit_log
 from backend.modules.agents.intention.schemas import AssumptionItem, IntentOutput
 
 

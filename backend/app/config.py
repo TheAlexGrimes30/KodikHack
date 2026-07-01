@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     DB_HOST: str = "localhost"
     DB_PORT: int = 5432
 
+    OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
+    OLLAMA_MODEL: str = "qwen2.5:3b"
+    OLLAMA_TEMPERATURE: float = 0.2
+    OLLAMA_TIMEOUT: int = 60
+
     model_config = SettingsConfigDict(
         env_file=ENV_FILE,
         env_file_encoding="utf-8",
@@ -28,6 +33,15 @@ class Settings(BaseSettings):
 
         return (
             f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}"
+            f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        )
+
+    @property
+    def ALEMBIC_DATABASE_URL(self) -> str:
+        """Sync URL для Alembic + psycopg2."""
+
+        return (
+            f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}"
             f"@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
         )
 

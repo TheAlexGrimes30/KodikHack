@@ -4,6 +4,7 @@ from typing import Any
 from backend.modules.agents.common.llm import LLMClient
 from backend.modules.agents.common.prompt_utils import load_prompt
 from backend.modules.agents.common.state import AgentState
+from backend.modules.agents.common.utils import decimal_or_none
 from backend.modules.agents.intention.schemas import AssumptionItem, IntentOutput
 
 
@@ -24,6 +25,20 @@ class IntentionAgent:
     def run(self, state: AgentState) -> dict[str, Any]:
         raw_intent = state.get("raw_intent", "")
         project_context = state.get("project_context", {})
+
+        fallback_json = self._fallback_output(raw_intent, project_context).model_dump(mode="json")
+        fallback_text = str(fallback_json).replace("'", '"')
+
+        user_prompt = f"""
+        Сырой запрос пользователя:
+        {raw_intent}
+
+        Контекст проекта:
+        {project_context}
+        """
+
+        llm_text = self.llm.generate(self.system_prompt, user_prompt, fallback=fallback_text)
+        parsed = extract_json_object(llm_text)
 
     def _fallback_output(self, raw_intent: str, project_context: dict[str, Any]) -> IntentOutput:
         return IntentOutput(

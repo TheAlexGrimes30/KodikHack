@@ -1,8 +1,11 @@
 import json
 import re
+from datetime import datetime, timezone
 from decimal import Decimal
 from typing import Any
 
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 def decimal_or_none(value: Any) -> Decimal | None:
     if value is None or value == "":
@@ -41,3 +44,21 @@ def extract_json_object(text: str) -> dict[str, Any] | None:
         return parsed if isinstance(parsed, dict) else None
     except Exception:
         return None
+
+def add_audit_log(
+    state: dict[str, Any],
+    *,
+    actor: str,
+    event_type: str,
+    payload: dict[str, Any],
+) -> list[dict[str, Any]]:
+    logs = list(state.get("audit_log") or [])
+    logs.append(
+        {
+            "actor": actor,
+            "event_type": event_type,
+            "payload": payload,
+            "created_at": now_iso(),
+        }
+    )
+    return logs

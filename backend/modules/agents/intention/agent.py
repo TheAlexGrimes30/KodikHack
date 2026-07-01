@@ -1,10 +1,12 @@
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from backend.modules.agents.common.llm import LLMClient
 from backend.modules.agents.common.prompt_utils import load_prompt
 from backend.modules.agents.common.state import AgentState
-from backend.modules.agents.common.utils import decimal_or_none
+from backend.modules.agents.common.utils import decimal_or_none, extract_json_object
 from backend.modules.agents.intention.schemas import AssumptionItem, IntentOutput
 
 
@@ -39,6 +41,36 @@ class IntentionAgent:
 
         llm_text = self.llm.generate(self.system_prompt, user_prompt, fallback=fallback_text)
         parsed = extract_json_object(llm_text)
+
+        output = self._fallback_output(raw_intent, project_context)
+
+        if parsed:
+            try:
+                output = IntentOutput.model_validate(parsed)
+            except ValidationError:
+                pass
+
+        intent = {
+            "title": output.title,
+            "description": output.description,
+            "invest_money": decimal_or_none(output.invest_money),
+            "invest_effort": decimal_or_none(output.invest_effort),
+            "horizon_months": decimal_or_none(output.horizon_months),
+            "expected_result": output.expected_result,
+            "metrics": output.metrics,
+        }
+        assumptions = [item.model_dump(mode="json") for item in output.assumptions]
+
+        return {
+            "intent": intent,
+            "assumptions": assumptions,
+            "audit_log": add_audit_log(
+                state,
+                actor=self.actor,
+                event_type="intent_extracted",
+                payload={"intent": intent, "assumptions_count": len(assumptions)},
+            ),
+        }
 
     def _fallback_output(self, raw_intent: str, project_context: dict[str, Any]) -> IntentOutput:
         return IntentOutput(

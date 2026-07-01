@@ -3,9 +3,9 @@ import uuid
 
 from sqlalchemy import UUID, ForeignKey, Text, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from backend.db.base import Base, TimestampMixin
 
 if typing.TYPE_CHECKING:
-    from backend.db.base import Base, TimestampMixin
     from backend.db.configurators import Configurator
 
 
@@ -24,7 +24,7 @@ class FailureCase(Base, TimestampMixin):
     source: Mapped[str | None] = mapped_column(Text)
     qdrant_point_id: Mapped[str | None] = mapped_column(Text)
 
-    configurator: Mapped[Configurator] = relationship(back_populates="failure_cases")
+    configurator: Mapped["Configurator"] = relationship(back_populates="failure_cases")
 
     __table_args__ = (
         Index("idx_failure_cases_vertical", "vertical_key"),

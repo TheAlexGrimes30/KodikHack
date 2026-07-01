@@ -6,9 +6,9 @@ from sqlalchemy import UUID, ForeignKey, Enum, Numeric, Text, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.db.base import Base, TimestampMixin
+from backend.db.enums import Reversibility, ThresholdVerdict
 
 if typing.TYPE_CHECKING:
-    from backend.db.enums import Reversibility, ThresholdVerdict
     from backend.db.sessions import Session
 
 
@@ -37,6 +37,6 @@ class ThresholdDecision(Base, TimestampMixin):
     trust_level: Mapped[Decimal | None] = mapped_column(Numeric)
     rationale: Mapped[str | None] = mapped_column(Text)
 
-    session: Mapped[Session] = relationship(back_populates="threshold_decision")
+    session: Mapped["Session"] = relationship(back_populates="threshold_decision")
 
     __table_args__ = (CheckConstraint("trust_level BETWEEN 0 AND 1", name="ck_threshold_trust_level"),)

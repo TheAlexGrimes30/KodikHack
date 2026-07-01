@@ -1,6 +1,4 @@
 from backend.db.base import Base
-from backend.db.callibration_records import CalibrationRecord
-from backend.db.enviroment_events import EnvironmentEvent
 
 from backend.db.users import User
 from backend.db.projects import Project
@@ -15,6 +13,7 @@ from backend.db.attacks import Attack
 from backend.db.threshold_decisions import ThresholdDecision
 
 from backend.db.bets import Bet
+from backend.db.callibration_records import CalibrationRecord
 
 from backend.db.configurators import Configurator
 from backend.db.industry_benchmarks import IndustryBenchmark
@@ -22,6 +21,7 @@ from backend.db.failure_cases import FailureCase
 
 from backend.db.data_feeds import DataFeed
 from backend.db.macro_indicators import MacroIndicator
+from backend.db.enviroment_events import EnvironmentEvent
 
 from backend.db.session_logs import SessionLog
 

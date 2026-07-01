@@ -31,6 +31,6 @@ class IndustryBenchmark(Base):
         nullable=False
     )
 
-    configurator: Mapped[Configurator] = relationship(back_populates="benchmarks")
+    configurator: Mapped["Configurator"] = relationship(back_populates="benchmarks")
 
     __table_args__ = (Index("idx_benchmarks_vertical", "vertical_key"),)

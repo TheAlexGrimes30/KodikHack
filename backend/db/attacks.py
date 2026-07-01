@@ -4,10 +4,10 @@ from decimal import Decimal
 
 from sqlalchemy import UUID, ForeignKey, Text, Numeric, Boolean, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
+from backend.db.base import Base, TimestampMixin
 
 if typing.TYPE_CHECKING:
     from backend.db.assumptions import Assumption
-    from backend.db.base import Base, TimestampMixin
     from backend.db.env_scenarios import EnvScenario
     from backend.db.sessions import Session
 
@@ -31,8 +31,8 @@ class Attack(Base, TimestampMixin):
     est_loss_money: Mapped[Decimal | None] = mapped_column(Numeric(14, 2))
     survivable: Mapped[bool | None] = mapped_column(Boolean)
 
-    session: Mapped[Session] = relationship(back_populates="attacks")
-    assumption: Mapped[Assumption | None] = relationship(back_populates="attacks")
-    scenario: Mapped[EnvScenario | None] = relationship(back_populates="attacks")
+    session: Mapped["Session"] = relationship(back_populates="attacks")
+    assumption: Mapped["Assumption | None"] = relationship(back_populates="attacks")
+    scenario: Mapped["EnvScenario | None"] = relationship(back_populates="attacks")
 
     __table_args__ = (Index("idx_attacks_session", "session_id"),)

@@ -6,11 +6,11 @@ from sqlalchemy import ForeignKey, UUID, Text, Enum, Integer, Numeric, Index
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from backend.db.base import Base, TimestampMixin
+from backend.db.enums import ProjectStage, RiskAppetite
 
 if typing.TYPE_CHECKING:
     from backend.db.bets import Bet
     from backend.db.callibration_records import CalibrationRecord
-    from backend.db.enums import ProjectStage, RiskAppetite
     from backend.db.sessions import Session
     from backend.db.users import User
 
@@ -48,9 +48,18 @@ class Project(Base, TimestampMixin):
     runway_months: Mapped[Decimal | None] = mapped_column(Numeric(5, 1))
     geography: Mapped[str | None] = mapped_column(Text)
 
-    user: Mapped[User] = relationship(back_populates="projects")
-    sessions: Mapped[list["Session"]] = relationship(back_populates="project", cascade="all, delete-orphan")
-    bets: Mapped[list["Bet"]] = relationship(back_populates="project", cascade="all, delete-orphan")
-    calibration_records: Mapped[list["CalibrationRecord"]] = relationship(back_populates="project",
-                                                                          cascade="all, delete-orphan")
+    user: Mapped["User"] = relationship(back_populates="projects")
+    sessions: Mapped[list["Session"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+    bets: Mapped[list["Bet"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+    calibration_records: Mapped[list["CalibrationRecord"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
     __table_args__ = (Index("idx_projects_user", "user_id"),)

@@ -34,5 +34,5 @@ class Intent(Base, TimestampMixin):
         server_default="{}"
     )
 
-    session: Mapped[Session] = relationship(back_populates="intent")
+    session: Mapped["Session"] = relationship(back_populates="intent")
     assumptions: Mapped[list["Assumption"]] = relationship(back_populates="intent", cascade="all, delete-orphan")

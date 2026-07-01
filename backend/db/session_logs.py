@@ -19,26 +19,42 @@ class SessionLog(Base, TimestampMixin):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         primary_key=True,
-        default=uuid.uuid4
+        default=uuid.uuid4,
     )
 
     session_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("sessions.id", ondelete="CASCADE"),
-        nullable=False
+        nullable=False,
     )
 
     actor: Mapped[AgentKind | None] = mapped_column(
-        Enum(AgentKind, name="agent_kind", values_callable=lambda e: [x.value for x in e])
+        Enum(
+            AgentKind,
+            name="agent_kind",
+            values_callable=lambda e: [x.value for x in e],
+        )
     )
 
-    event_type: Mapped[str] = mapped_column(Text, nullable=False)
+    event_type: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+    )
+
     payload: Mapped[dict[str, Any]] = mapped_column(
         JSONB,
         nullable=False,
         default=dict,
-        server_default="{}"
+        server_default="{}",
     )
 
-    session: Mapped[Session] = relationship(back_populates="logs")
+    session: Mapped["Session"] = relationship(
+        back_populates="logs",
+    )
 
-    __table_args__ = (Index("idx_session_logs_session", "session_id", "created_at"),)
+    __table_args__ = (
+        Index(
+            "idx_session_logs_session",
+            "session_id",
+            "created_at",
+        ),
+    )

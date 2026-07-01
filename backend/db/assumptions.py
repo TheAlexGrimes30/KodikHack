@@ -3,10 +3,10 @@ import uuid
 
 from sqlalchemy import Integer, Boolean, Text, CheckConstraint, Index, UUID, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from backend.db.base import Base, TimestampMixin
 
 if typing.TYPE_CHECKING:
     from backend.db.attacks import Attack
-    from backend.db.base import Base, TimestampMixin
     from backend.db.intents import Intent
 
 
@@ -34,7 +34,7 @@ class Assumption(Base, TimestampMixin):
 
     criticality: Mapped[int | None] = mapped_column(Integer)
 
-    intent: Mapped[Intent] = relationship(back_populates="assumptions")
+    intent: Mapped["Intent"] = relationship(back_populates="assumptions")
     attacks: Mapped[list["Attack"]] = relationship(back_populates="assumption")
 
     __table_args__ = (

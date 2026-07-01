@@ -6,10 +6,10 @@ from typing import Any
 from sqlalchemy import UUID, ForeignKey, Text, Integer, Numeric, CheckConstraint, Index
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from backend.db.base import Base, TimestampMixin
 
 if typing.TYPE_CHECKING:
     from backend.db.attacks import Attack
-    from backend.db.base import Base, TimestampMixin
     from backend.db.sessions import Session
 
 
@@ -27,7 +27,7 @@ class EnvScenario(Base, TimestampMixin):
     likelihood: Mapped[Decimal | None] = mapped_column(Numeric)
     source_refs: Mapped[list[Any]] = mapped_column(JSONB, default=list, server_default="[]")
 
-    session: Mapped[Session] = relationship(back_populates="env_scenarios")
+    session: Mapped["Session"] = relationship(back_populates="env_scenarios")
     attacks: Mapped[list["Attack"]] = relationship(back_populates="scenario")
 
     __table_args__ = (

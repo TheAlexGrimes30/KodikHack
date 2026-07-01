@@ -5,9 +5,10 @@ from decimal import Decimal
 
 from sqlalchemy import Index, Text, ForeignKey, UUID, Numeric, DateTime, func
 from sqlalchemy.orm import Mapped, relationship, mapped_column
+from backend.db.base import Base, TimestampMixin
 
 if typing.TYPE_CHECKING:
-    from backend.db.base import Base, TimestampMixin
+
     from backend.db.projects import Project
     from backend.db.sessions import Session
 
@@ -41,8 +42,8 @@ class Bet(Base, TimestampMixin):
     anomaly_note: Mapped[str | None] = mapped_column(Text)
     result_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
-    session: Mapped[Session] = relationship(back_populates="bets", foreign_keys=[session_id])
-    project: Mapped[Project] = relationship(back_populates="bets")
+    session: Mapped["Session"] = relationship(back_populates="bets", foreign_keys=[session_id])
+    project: Mapped["Project"] = relationship(back_populates="bets")
     calibration_record: Mapped["CalibrationRecord | None"] = relationship(
         back_populates="bet",
         cascade="all, delete-orphan",

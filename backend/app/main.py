@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from backend.app.rag_api import router as rag_router
+from backend.app.workflow_api import router as workflow_router
 from backend.db.database import engine
 
 
@@ -26,6 +28,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(rag_router)
+app.include_router(workflow_router)
 
 @app.get("/")
 async def root():

@@ -19,15 +19,30 @@ def clamp(value: float, minimum: float = 0.0, maximum: float = 1.0) -> float:
     return max(minimum, min(value, maximum))
 
 
-def extract_json_object(text: str) -> dict[str, Any] | None:
+def make_json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {str(key): make_json_safe(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [make_json_safe(item) for item in value]
+    if isinstance(value, Decimal):
+        return str(value)
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return value
+
+
+def extract_json_object(text: Any) -> dict[str, Any] | list[Any] | None:
     """Пытается вытащить JSON из ответа LLM.
 
     Заглушки остаются: если модель вернула невалидный JSON, агент использует
     fallback-структуру. Для хакатона этого достаточно.
     """
 
-    if not text:
+    if text is None or text == "":
         return None
+
+    if isinstance(text, (dict, list)):
+        return make_json_safe(text)
 
     cleaned = text.strip()
     cleaned = re.sub(r"^```(?:json)?", "", cleaned).strip()
@@ -35,7 +50,7 @@ def extract_json_object(text: str) -> dict[str, Any] | None:
 
     try:
         parsed = json.loads(cleaned)
-        return parsed if isinstance(parsed, dict) else None
+        return make_json_safe(parsed) if isinstance(parsed, (dict, list)) else None
     except Exception:
         pass
 
@@ -45,7 +60,7 @@ def extract_json_object(text: str) -> dict[str, Any] | None:
 
     try:
         parsed = json.loads(match.group(0))
-        return parsed if isinstance(parsed, dict) else None
+        return make_json_safe(parsed) if isinstance(parsed, (dict, list)) else None
     except Exception:
         return None
 

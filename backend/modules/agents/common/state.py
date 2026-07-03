@@ -21,6 +21,7 @@ class AgentState(TypedDict, total=False):
     assumptions: list[dict[str, Any]]
 
     # Данные под таблицы env_scenarios / attacks
+    environment_sources: list[dict[str, Any]]
     env_scenarios: list[dict[str, Any]]
     attacks: list[dict[str, Any]]
 

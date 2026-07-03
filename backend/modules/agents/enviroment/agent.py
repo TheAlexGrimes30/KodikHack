@@ -7,7 +7,7 @@ from backend.modules.agents.common.llm import LLMClient
 from backend.modules.agents.common.prompt_utils import load_prompt
 from backend.modules.agents.common.state import AgentState
 from backend.modules.agents.common.utils import add_audit_log, extract_json_object
-from backend.modules.agents.enviroment.retriever import EnvironmentRetriever, StubEnvironmentRetriever
+from backend.modules.agents.enviroment.retriever import DefaultEnvironmentRetriever, EnvironmentRetriever
 from backend.modules.agents.enviroment.schemas import EnvScenarioItem, EnvironmentOutput
 
 
@@ -30,7 +30,7 @@ class EnvironmentAgent:
         retriever: EnvironmentRetriever | None = None,
     ) -> None:
         self.llm = llm or LLMClient()
-        self.retriever = retriever or StubEnvironmentRetriever()
+        self.retriever = retriever or DefaultEnvironmentRetriever()
         self.system_prompt = load_prompt(Path(__file__).with_name("prompts.md"))
 
     async def run(self, state: AgentState) -> dict[str, Any]:

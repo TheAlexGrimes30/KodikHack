@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABC
 
 from backend.modules.agents.enviroment.schemas import EnvironmentSource
+from backend.modules.rag.retriever import HybridEnvironmentRetriever
 
 
 class EnvironmentRetriever(ABC):
@@ -56,3 +57,32 @@ class StubEnvironmentRetriever(EnvironmentRetriever):
                 metadata={"risk_type": "runway"},
             ),
         ][:limit]
+
+
+class DefaultEnvironmentRetriever(EnvironmentRetriever):
+    def __init__(self) -> None:
+        self.hybrid = HybridEnvironmentRetriever()
+        self.stub = StubEnvironmentRetriever()
+
+    async def retrieve(
+        self,
+        *,
+        query: str,
+        project_context: dict,
+        assumptions: list[dict],
+        limit: int = 5,
+    ) -> list[EnvironmentSource]:
+        sources = await self.hybrid.retrieve(
+            query=query,
+            project_context=project_context,
+            assumptions=assumptions,
+            limit=limit,
+        )
+        if sources:
+            return sources
+        return await self.stub.retrieve(
+            query=query,
+            project_context=project_context,
+            assumptions=assumptions,
+            limit=limit,
+        )

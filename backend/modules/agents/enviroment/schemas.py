@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -5,6 +7,9 @@ class EnvironmentSource(BaseModel):
     title: str
     source_type: str = "stub"
     content: str
+    url: str | None = None
+    published_at: datetime | None = None
+    trust_score: float | None = None
     metadata: dict = Field(default_factory=dict)
 
 

@@ -22,6 +22,10 @@ from backend.db.failure_cases import FailureCase
 from backend.db.data_feeds import DataFeed
 from backend.db.macro_indicators import MacroIndicator
 from backend.db.enviroment_events import EnvironmentEvent
+from backend.db.source_catalog import SourceCatalog
+from backend.db.source_documents import SourceDocument
+from backend.db.source_chunks import SourceChunk
+from backend.db.ingestion_runs import IngestionRun
 
 from backend.db.session_logs import SessionLog
 
@@ -43,5 +47,9 @@ __all__ = [
     "DataFeed",
     "MacroIndicator",
     "EnvironmentEvent",
+    "SourceCatalog",
+    "SourceDocument",
+    "SourceChunk",
+    "IngestionRun",
     "SessionLog",
 ]
